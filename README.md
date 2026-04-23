@@ -19,15 +19,15 @@ npx oc-usage
 npx oc-usage --period week
 ```
 
-> 설치 시 플랫폼에 맞는 바이너리가 자동으로 다운로드됩니다 (macOS, Linux, Windows 지원).
+> 설치 시 플랫폼에 맞는 바이너리가 자동으로 다운로드됩니다.
 
-## 설치
+| OS | Arch | 지원 |
+|---|---|---|
+| macOS (Apple Silicon) | arm64 | ✅ |
+| Linux | amd64 | ✅ |
+| Windows | amd64 | ✅ |
 
-```bash
-cd opencode-usage && make install
-```
-
-또는 직접 빌드:
+## 소스에서 빌드
 
 ```bash
 cd opencode-usage && CGO_ENABLED=0 go build -o oc-usage .
@@ -81,8 +81,8 @@ oc-usage --color=always
 
 ## 요구사항
 
-- Go 1.21+
 - OpenCode가 설치되어 있고 `~/.local/share/opencode/opencode.db` 가 존재해야 함
+- 소스 빌드 시 Go 1.21+ 필요
 
 ## License
 
