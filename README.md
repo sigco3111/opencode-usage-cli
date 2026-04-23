@@ -4,6 +4,21 @@ OpenCode 사용량 통계를 터미널에서 조회하는 CLI 도구.
 
 `~/.local/share/opencode/opencode.db` (SQLite)에서 데이터를 읽어 한국어 포맷팅된 테이블로 출력합니다.
 
+## npm으로 설치
+
+```bash
+npm install -g oc-usage
+```
+
+또는 npx로 실행:
+
+```bash
+npx oc-usage
+npx oc-usage --period week
+```
+
+> 설치 시 플랫폼에 맞는 바이너리가 자동으로 다운로드됩니다 (macOS, Linux, Windows 지원).
+
 ## 설치
 
 ```bash
