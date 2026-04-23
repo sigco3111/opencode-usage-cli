@@ -9,14 +9,14 @@ OpenCode 사용량 통계를 터미널에서 조회하는 CLI 도구.
 ## npm으로 설치
 
 ```bash
-npm install -g oc-usage
+npm install -g @sigco3111/oc-usage
 ```
 
 또는 npx로 실행:
 
 ```bash
-npx oc-usage
-npx oc-usage --period week
+npx @sigco3111/oc-usage
+npx @sigco3111/oc-usage --period week
 ```
 
 > 설치 시 플랫폼에 맞는 바이너리가 자동으로 다운로드됩니다.
