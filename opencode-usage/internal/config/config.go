@@ -94,7 +94,7 @@ func ParsePeriod(period, from, to string) (int64, int64, string, error) {
 func GetDBPath() string {
 	path := DBPath
 	if path == "" {
-		path = defaultDBPath()
+		path = findDBPath()
 	}
 	if strings.HasPrefix(path, "~/") {
 		usr, err := user.Current()
@@ -111,15 +111,48 @@ func GetDBPath() string {
 	return path
 }
 
-func defaultDBPath() string {
-	if runtime.GOOS == "windows" {
-		localAppData := os.Getenv("LOCALAPPDATA")
-		if localAppData == "" {
-			localAppData = filepath.Join(os.Getenv("USERPROFILE"), "AppData", "Local")
+func homeDir() string {
+	usr, err := user.Current()
+	if err != nil {
+		if h := os.Getenv("HOME"); h != "" {
+			return h
 		}
-		return filepath.Join(localAppData, "opencode", "opencode.db")
+		return os.Getenv("USERPROFILE")
 	}
-	return models.DefaultDBPath
+	return usr.HomeDir
+}
+
+func findDBPath() string {
+	candidates := dbCandidates()
+	for _, p := range candidates {
+		if strings.HasPrefix(p, "~/") {
+			p = filepath.Join(homeDir(), p[2:])
+		}
+		if _, err := os.Stat(p); err == nil {
+			return p
+		}
+	}
+	return candidates[0]
+}
+
+func dbCandidates() []string {
+	if runtime.GOOS != "windows" {
+		return []string{models.DefaultDBPath}
+	}
+	home := homeDir()
+	localAppData := os.Getenv("LOCALAPPDATA")
+	if localAppData == "" {
+		localAppData = filepath.Join(home, "AppData", "Local")
+	}
+	appData := os.Getenv("APPDATA")
+	if appData == "" {
+		appData = filepath.Join(home, "AppData", "Roaming")
+	}
+	return []string{
+		filepath.Join(localAppData, "opencode", "opencode.db"),
+		filepath.Join(home, ".local", "share", "opencode", "opencode.db"),
+		filepath.Join(appData, "opencode", "opencode.db"),
+	}
 }
 
 func IsColorEnabled() bool {

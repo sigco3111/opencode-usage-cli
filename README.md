@@ -33,6 +33,12 @@ npx @sigco3111/oc-usage --period week
 cd opencode-usage && CGO_ENABLED=0 go build -o oc-usage .
 ```
 
+## 삭제
+
+```bash
+npm uninstall -g @sigco3111/oc-usage
+```
+
 ## 사용법
 
 ### 기본 실행 (최근 30일)
@@ -81,8 +87,15 @@ oc-usage --color=always
 
 ## 요구사항
 
-- OpenCode가 설치되어 있고 `~/.local/share/opencode/opencode.db` 가 존재해야 함
+- OpenCode가 설치되어 있고 사용 이력이 있어야 함
 - 소스 빌드 시 Go 1.21+ 필요
+
+**DB 검색 경로** (자동 감지):
+
+| OS | 검색 순서 |
+|---|---|
+| macOS / Linux | `~/.local/share/opencode/opencode.db` |
+| Windows | `%LOCALAPPDATA%\opencode\opencode.db` → `%HOME%\.local\share\opencode\opencode.db` → `%APPDATA%\opencode\opencode.db` |
 
 ## License
 
