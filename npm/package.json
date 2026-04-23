@@ -1,6 +1,6 @@
 {
   "name": "@sigco3111/oc-usage",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenCode 사용량 통계 CLI - 터미널에서 OpenCode 사용 데이터를 조회합니다",
   "bin": {
     "oc-usage": "bin/oc-usage"
