@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -93,18 +94,32 @@ func ParsePeriod(period, from, to string) (int64, int64, string, error) {
 func GetDBPath() string {
 	path := DBPath
 	if path == "" {
-		path = models.DefaultDBPath
+		path = defaultDBPath()
 	}
 	if strings.HasPrefix(path, "~/") {
 		usr, err := user.Current()
 		if err != nil {
 			home := os.Getenv("HOME")
+			if home == "" {
+				home = os.Getenv("USERPROFILE")
+			}
 			path = filepath.Join(home, path[2:])
 		} else {
 			path = filepath.Join(usr.HomeDir, path[2:])
 		}
 	}
 	return path
+}
+
+func defaultDBPath() string {
+	if runtime.GOOS == "windows" {
+		localAppData := os.Getenv("LOCALAPPDATA")
+		if localAppData == "" {
+			localAppData = filepath.Join(os.Getenv("USERPROFILE"), "AppData", "Local")
+		}
+		return filepath.Join(localAppData, "opencode", "opencode.db")
+	}
+	return models.DefaultDBPath
 }
 
 func IsColorEnabled() bool {

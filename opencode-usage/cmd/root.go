@@ -200,19 +200,19 @@ func renderDefault(conn *sql.DB, startMs, endMs int64, displayName string) error
 
 	models_, _ := db.GetModelUsage(conn, startMs, endMs)
 	if len(models_) > 0 {
-		format.RenderSectionHeader("🤖 모델 Top 5")
+		format.RenderSectionHeader(format.Emoji("🤖", "[MODELS]") + " 모델 Top 5")
 		fmt.Println(format.RenderModelTable(models_, 5))
 	}
 
 	projects, _ := db.GetProjectUsage(conn, startMs, endMs)
 	if len(projects) > 0 {
-		format.RenderSectionHeader("📁 프로젝트 Top 5")
+		format.RenderSectionHeader(format.Emoji("📁", "[PROJECTS]") + " 프로젝트 Top 5")
 		fmt.Println(format.RenderProjectTable(projects, 5))
 	}
 
 	daily, _ := db.GetDailyUsage(conn, startMs, endMs)
 	if len(daily) > 0 {
-		format.RenderSectionHeader("📅 일별 추이")
+		format.RenderSectionHeader(format.Emoji("📅", "[DAILY]") + " 일별 추이")
 		fmt.Println(format.RenderDailyTable(daily, true, false))
 
 		peakDate, peakMsg := format.FindPeakDaily(daily)

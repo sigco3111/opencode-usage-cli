@@ -10,7 +10,7 @@ import (
 
 func RenderSummary(summary *models.Summary, dateRange string) {
 	fmt.Println()
-	fmt.Printf("  %s %s\n", Header("📊 OpenCode 사용량 통계"), Highlight("["+dateRange+"]"))
+	fmt.Printf("  %s %s\n", Header(Emoji("📊", "[SUMMARY]")+" OpenCode 사용량 통계"), Highlight("["+dateRange+"]"))
 	fmt.Println("  " + Separator())
 	fmt.Println()
 
@@ -28,14 +28,43 @@ func RenderSummary(summary *models.Summary, dateRange string) {
 	fmt.Println()
 }
 
+func newTableWriter() table.Writer {
+	t := table.NewWriter()
+	if colorEnabled {
+		t.SetStyle(table.StyleRounded)
+	} else {
+		t.SetStyle(table.StyleDefault)
+		t.Style().Box = StyleASCII()
+	}
+	t.Style().Options.SeparateRows = false
+	return t
+}
+
+func StyleASCII() table.BoxStyle {
+	return table.BoxStyle{
+		MiddleHorizontal: "-",
+		MiddleVertical:   "|",
+		MiddleSeparator:  "+",
+		BottomLeft:       "+",
+		BottomRight:      "+",
+		BottomSeparator:  "+",
+		Left:             "|",
+		LeftSeparator:    "+",
+		Right:            "|",
+		RightSeparator:   "+",
+		TopLeft:          "+",
+		TopRight:         "+",
+		TopSeparator:     "+",
+		UnfinishedRow:    " ",
+	}
+}
+
 func RenderModelTable(modelUsages []models.ModelUsage, limit int) string {
 	if len(modelUsages) == 0 {
 		return "  모델 사용량이 없습니다."
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleRounded)
-	t.Style().Options.SeparateRows = false
+	t := newTableWriter()
 
 	t.AppendHeader(table.Row{"#", "모델", "Provider", "응답수", "Input", "Output", "비용"})
 
@@ -68,9 +97,7 @@ func RenderProjectTable(projects []models.ProjectUsage, limit int) string {
 		return "  프로젝트 사용량이 없습니다."
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleRounded)
-	t.Style().Options.SeparateRows = false
+	t := newTableWriter()
 
 	t.AppendHeader(table.Row{"#", "프로젝트", "세션", "최초 사용", "마지막 사용"})
 
@@ -114,9 +141,7 @@ func RenderDailyTable(daily []models.DailyUsage, showPeak bool, showCumulative b
 		}
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleRounded)
-	t.Style().Options.SeparateRows = false
+	t := newTableWriter()
 
 	if showCumulative {
 		t.AppendHeader(table.Row{"날짜", "응답", "Input", "Output", "누적 응답", "누적 Input", "누적 Output"})
@@ -159,9 +184,7 @@ func RenderHourlyTable(hourly []models.HourlyUsage) string {
 		return "  시간별 사용량이 없습니다."
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleRounded)
-	t.Style().Options.SeparateRows = false
+	t := newTableWriter()
 
 	t.AppendHeader(table.Row{"시간", "응답", "Input", "Output"})
 
@@ -182,9 +205,7 @@ func RenderAgentTable(agents []models.AgentUsage) string {
 		return "  에이전트 사용량이 없습니다."
 	}
 
-	t := table.NewWriter()
-	t.SetStyle(table.StyleRounded)
-	t.Style().Options.SeparateRows = false
+	t := newTableWriter()
 
 	t.AppendHeader(table.Row{"#", "에이전트", "응답", "Input", "Output"})
 
@@ -207,6 +228,16 @@ func RenderAgentTable(agents []models.AgentUsage) string {
 
 func RenderSectionHeader(title string) {
 	fmt.Printf("  %s\n", Header(title))
+}
+
+var SectionTitles = struct {
+	Model   string
+	Project string
+	Daily   string
+}{
+	Model:   "[TOP 5] 모델별 사용량",
+	Project: "[TOP 5] 프로젝트별 세션 수",
+	Daily:   "일별 사용 추이",
 }
 
 func FindPeakHour(hourly []models.HourlyUsage) string {

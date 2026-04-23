@@ -33,5 +33,15 @@ func Highlight(text string) string {
 }
 
 func Separator() string {
+	if !colorEnabled {
+		return "----------------------------------------"
+	}
 	return "────────────────────────────────────────"
+}
+
+func Emoji(emoji, fallback string) string {
+	if !colorEnabled {
+		return fallback
+	}
+	return emoji
 }
