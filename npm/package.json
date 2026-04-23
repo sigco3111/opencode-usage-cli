@@ -1,0 +1,24 @@
+{
+  "name": "oc-usage",
+  "version": "0.1.0",
+  "description": "OpenCode 사용량 통계 CLI - 터미널에서 OpenCode 사용 데이터를 조회합니다",
+  "bin": {
+    "oc-usage": "bin/oc-usage"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "files": [
+    "bin/oc-usage",
+    "install.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigco3111/opencode-usage-cli.git",
+    "directory": "npm"
+  },
+  "keywords": ["opencode", "cli", "usage", "statistics"],
+  "author": "sigco3111",
+  "license": "MIT",
+  "homepage": "https://github.com/sigco3111/opencode-usage-cli#readme"
+}

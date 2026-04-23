@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+const path = require('path');
+const fs = require('fs');
+const { execFileSync } = require('child_process');
+
+const platform = process.platform;
+const arch = process.arch;
+
+const osMap = { darwin: 'darwin', linux: 'linux', win32: 'windows' };
+const archMap = { arm64: 'arm64', x64: 'amd64', amd64: 'amd64' };
+
+const os = osMap[platform];
+const binaryArch = archMap[arch];
+
+if (!os || !binaryArch) {
+  console.error(`Unsupported platform: ${platform}-${arch}`);
+  process.exit(1);
+}
+
+let binName = `bin-${os}-${binaryArch}`;
+if (platform === 'win32') binName += '.exe';
+
+const binPath = path.join(__dirname, '..', binName);
+
+if (!fs.existsSync(binPath)) {
+  console.error('');
+  console.error('Could not find oc-usage binary for your platform.');
+  console.error(`Expected: ${binPath}`);
+  console.error('');
+  console.error('Try running `npm install` again to download the binary.');
+  console.error('If the problem persists, install Go and build from source:');
+  console.error('  git clone https://github.com/sigco3111/opencode-usage-cli.git');
+  console.error('  cd opencode-usage-cli/opencode-usage && CGO_ENABLED=0 go build -o oc-usage .');
+  console.error('');
+  process.exit(1);
+}
+
+try {
+  execFileSync(binPath, process.argv.slice(2), { stdio: 'inherit' });
+} catch (e) {
+  if (e.status !== undefined) {
+    process.exit(e.status);
+  }
+  throw e;
+}
